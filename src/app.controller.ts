@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, InternalServerErrorException  } from '@nestjs/common';
 import { AppService } from './app.service';
 import { FirestoreService } from './firestore/firestore.service';
 
@@ -16,10 +16,11 @@ export class AppController {
 
   @Post()
   async createItem(@Body() createItemDto: any) {
-    const docId = await this.firestoreService.addDocument(
-      'items',
-      createItemDto,
-    );
-    return { id: docId };
+    try {
+      const docId = await this.firestoreService.addDocument('items', createItemDto);
+      return { id: docId };
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
   }
 }
