@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { FirestoreModule } from './firestore/firestore.module';
 import { ConfigModule } from '@nestjs/config';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot({
       isGlobal: true, // Make ConfigModule globally available
     }),
+    ProfileModule,
   ],
   controllers: [AppController],
   providers: [AppService],

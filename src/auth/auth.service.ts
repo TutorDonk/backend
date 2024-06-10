@@ -4,19 +4,6 @@ import { JwtService } from '@nestjs/jwt';
 import { RegisterPayloadDto } from './dto/register.dto';
 import { FirestoreService } from 'src/firestore/firestore.service';
 
-const fakeUsers = [
-  {
-    id: 1,
-    username: 'hafidz',
-    password: 'password',
-  },
-  {
-    id: 2,
-    username: 'hafidzz',
-    password: 'password',
-  },
-];
-
 @Injectable()
 export class AuthService {
   constructor(
