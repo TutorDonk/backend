@@ -6,6 +6,6 @@ export class RegisterPayloadDto{
     email : string;
     @ApiProperty({ example: 'password' })
     password : string;
-    @ApiProperty({ example: 'tutor / murid / orang tua' })
+    @ApiProperty({ example: 'tutor / student' })
     role : string;
 }
