@@ -15,5 +15,17 @@ export class FirestoreService {
     return doc.exists ? doc.data() : null;
   }
 
+  async updateDocument(collection: string, id: string, data: any) {
+    await this.firestore.collection(collection).doc(id).update(data);
+  }
+
+  async findDocumentByEmail(collection : string, email : string) : Promise<any>{
+    const querySnapshot = await this.firestore.collection(collection).where('email', '==', email).get();
+    if (querySnapshot.empty) {
+      return null;
+    }
+    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  }
+
   // Additional methods for interacting with Firestore can be added here
 }
