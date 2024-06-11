@@ -2,11 +2,12 @@ import { Controller, Get, Post, Req, UseGuards, Body, BadRequestException, Inter
 import { ProfileService } from './profile.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { Request } from 'express';
-import { ApiTags, ApiBody } from '@nestjs/swagger';
-import { UpdateTutorProfileDto } from 'src/auth/dto/update-tutor-profile.dto';
-import { UpdateNonTutorProfileDto } from 'src/auth/dto/update-non-tutor-profile.dto';
+import { ApiTags, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
+import { UpdateTutorProfileDto } from 'src/profile/dto/update-tutor-profile.dto';
+import { UpdateNonTutorProfileDto } from 'src/profile/dto/update-non-tutor-profile.dto';
 
 @ApiTags('profile')
+@ApiBearerAuth()
 @Controller('profile')
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}

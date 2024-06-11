@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { FirestoreService } from 'src/firestore/firestore.service';
-import { UpdateTutorProfileDto } from 'src/auth/dto/update-tutor-profile.dto';
-import { UpdateNonTutorProfileDto } from 'src/auth/dto/update-non-tutor-profile.dto';
+import { UpdateTutorProfileDto } from 'src/profile/dto/update-tutor-profile.dto';
+import { UpdateNonTutorProfileDto } from 'src/profile/dto/update-non-tutor-profile.dto';
 
 @Injectable()
 export class ProfileService {
