@@ -21,7 +21,7 @@ export class ProfileService {
     }
   }
 
-  async createProfile(email: string, profileData: UpdateTutorProfileDto | UpdateNonTutorProfileDto, role: string) {
+  async updateProfile(email: string, profileData: UpdateTutorProfileDto | UpdateNonTutorProfileDto, role: string) {
     if (!email) {
       throw new Error('Email is required to update user profile');
     }

@@ -45,7 +45,7 @@ export class ProfileController {
       }
     }
   })
-  async createProfile(
+  async updateProfile(
     @Req() req: Request,
     @Body() updateProfileDto: UpdateTutorProfileDto | UpdateNonTutorProfileDto
   ) {
@@ -58,7 +58,7 @@ export class ProfileController {
     }
 
     try {
-      return this.profileService.createProfile(email, updateProfileDto, role);
+      return this.profileService.updateProfile(email, updateProfileDto, role);
     } catch (error) {
       throw new InternalServerErrorException('Failed to update user profile');
     }
