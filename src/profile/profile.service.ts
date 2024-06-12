@@ -12,7 +12,9 @@ export class ProfileService {
       throw new Error('Email is required to get user profile');
     }
 
-    const userProfile = await this.firestoreService.findDocumentByEmail('users', email);
+    const userProfile = await this.firestoreService.findDocumentByEmail('user', email);
+    const tutorProfile = await this.firestoreService.findDocumentByEmail('tutor', email);
+
     if (userProfile) {
       const { password, ...result } = userProfile[0];
       return result;
@@ -26,16 +28,21 @@ export class ProfileService {
       throw new Error('Email is required to update user profile');
     }
 
-    const userProfile = await this.firestoreService.findDocumentByEmail('users', email);
+    const collection = role === 'pengajar' ? 'tutor' : 'user';
+    const userProfile = await this.firestoreService.findDocumentByEmail(collection, email);
     if (userProfile) {
       const userId = userProfile[0].id;
 
-      let updateData: any = { address: profileData.address };
+      let updateData: any = {
+        domicile: profileData.domicile,
+        phoneNumber: profileData.phoneNumber,
+        educationLevel: profileData.educationLevel,
+        gender: profileData.gender
+      };
 
-      if (role === 'tutor') {
+      if (role === 'pengajar') {
         updateData = {
           ...updateData,
-          phoneNumber: (profileData as UpdateTutorProfileDto).phoneNumber,
           subjects: (profileData as UpdateTutorProfileDto).subjects,
           certifications: (profileData as UpdateTutorProfileDto).certifications
         };
@@ -44,12 +51,10 @@ export class ProfileService {
           ...updateData,
           parentPhoneNumber: (profileData as UpdateNonTutorProfileDto).parentPhoneNumber,
           parentName: (profileData as UpdateNonTutorProfileDto).parentName,
-          educationLevel: (profileData as UpdateNonTutorProfileDto).educationLevel,
-          class: (profileData as UpdateNonTutorProfileDto).class
         };
       }
 
-      await this.firestoreService.updateDocument('users', userId, updateData);
+      await this.firestoreService.updateDocument(collection, userId, updateData);
       return { message: 'Profile updated successfully' };
     } else {
       throw new Error('User not found');

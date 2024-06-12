@@ -35,14 +35,14 @@ export class ProfileController {
     schema: {
       type: 'object',
       properties: {
-        address: { type: 'string' },
+        domicile: { type: 'string' },
         phoneNumber: { type: 'string' },
-        subjects: { type: 'array', items: { type: 'string' } },
-        certifications: { type: 'array', items: { type: 'string' } },
-        parentPhoneNumber: { type: 'string' },
-        parentName: { type: 'string' },
-        educationLevel: { type: 'string' },
-        class: { type: 'string' }
+        educationLevel: { type: 'number' },
+        gender: { type: 'string' },
+        subjects: { type: 'array', items: { type: 'string' }, nullable: true },
+        certifications: { type: 'array', items: { type: 'string' }, nullable: true },
+        parentPhoneNumber: { type: 'string', nullable: true },
+        parentName: { type: 'string', nullable: true }
       }
     }
   })
