@@ -10,15 +10,17 @@ export class ForumService {
   }
 
   async createForum(data: any) {
-    return this.firestoreService.addDocument('forums', data);
+    const id =  await this.firestoreService.addDocument('forums', data);
+    this.firestoreService.updateDocument('forums', id, {...data, id : id})
+    return id;
   }
 
-  async likeForum(forumId: string) {
+  async likeForum(forumId: string, isLike : boolean) {
     const forum = await this.firestoreService.getDocument('forums', forumId);
     if (!forum) {
       throw new Error('Forum not found');
     }
-    const likes = forum.likes ? forum.likes + 1 : 1;
+    const likes = isLike ? 0 : 1;
     await this.firestoreService.updateDocument('forums', forumId, { likes });
     return { likes };
   }

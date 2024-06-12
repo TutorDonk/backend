@@ -1,5 +1,5 @@
 import { Controller, Get, UseGuards, Req, Post, Body, Patch, Param } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { ForumService } from './forum.service';
@@ -7,16 +7,21 @@ import { CreateForumDto } from './dto/createForum.dto';
 import { CreateCommentDto } from './dto/createComment.dto';
 
 @ApiTags('forum')
+@ApiBearerAuth()
 @Controller('forum')
 export class ForumController {
   constructor(private readonly forumService: ForumService) {}
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  getForum(@Req() req: Request) {}
+  async getForum(@Req() req: Request) {
+    const documents = await this.forumService.getAllForums();
+    return documents;
+  }
 
   @Post()
   @UseGuards(JwtAuthGuard)
+  @ApiBody({type : CreateForumDto})
   async postForum(@Req() req: Request, @Body() createForumDto: CreateForumDto) {
     const nama = req.user['0'].nama;
     const email = req.user['0'].email;
@@ -32,8 +37,8 @@ export class ForumController {
 
   @Patch(':id/like')
   @UseGuards(JwtAuthGuard)
-  async likeForum(@Param('id') id: string) {
-    const result = await this.forumService.likeForum(id);
+  async likeForum(@Param('id') id: string, @Param('isLike') isLike : boolean) {
+    const result = await this.forumService.likeForum(id, isLike);
     return result;
   }
 
