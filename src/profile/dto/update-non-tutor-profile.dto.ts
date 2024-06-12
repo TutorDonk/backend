@@ -1,18 +1,27 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateNonTutorProfileDto {
-  @ApiProperty()
-  address: string;
+  @ApiProperty({
+    example: 'Jakarta',
+  })
+  domicile: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    example: '081234567890',
+  })
+  phoneNumber: string;
+
+  @ApiProperty({ example: '081234567890' })
   parentPhoneNumber: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'Hafidz Shidqi' })
   parentName: string;
 
-  @ApiProperty()
-  educationLevel: string;
+  @ApiProperty({
+    example: 10,
+  })
+  educationLevel: number;
 
-  @ApiProperty()
-  class: string;
+  @ApiProperty({ example: 'Laki-laki' })
+  gender: string;
 }

@@ -12,28 +12,47 @@ export class AuthService {
   ) {}
 
   // Login
-  async login( loginDto: LoginDto) {
-    const existingUser = await this.firestoreService.findDocumentByEmail('users', loginDto.email);
-    console.log(existingUser)
-    if (existingUser && existingUser[0].password == loginDto.password) {
-      const {password, ...user} = existingUser;
-      return this.jwtService.sign(user);
+  async login(loginDto: LoginDto) {
+    const existingUser = await this.firestoreService.findDocumentByEmail('user', loginDto.email);
+    const existingTutor = await this.firestoreService.findDocumentByEmail('tutor', loginDto.email);
+    if ((existingUser && existingUser[0].password == loginDto.password) || (existingTutor && existingTutor[0].password == loginDto.password)) {
+      if (existingUser) {
+        const {password, ...user} = existingUser;
+        return this.jwtService.sign(user);
+      } else if (existingTutor) {
+        const {password, ...tutor} = existingTutor;
+        return this.jwtService.sign(tutor);
+      }
+    } else {
+      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }
   }
 
   // Register
   async register(registerPayloadDto: RegisterPayloadDto) {
+    const collection = registerPayloadDto.role === 'pengajar' ? 'tutor' : 'user';
+    const existingUserOrTutor = await this.firestoreService.findDocumentByEmail(collection, registerPayloadDto.email);
 
-    const existingUser = await this.firestoreService.findDocumentByEmail('users', registerPayloadDto.email);
-    if (existingUser) {
-      console.log(existingUser)
+    if (existingUserOrTutor) {
       throw new HttpException('Username already exists!', HttpStatus.BAD_REQUEST);
     }
 
-    const generatedId = await this.firestoreService.addDocument('users', registerPayloadDto);
-    registerPayloadDto.id = generatedId;
-    await this.firestoreService.updateDocument('users', generatedId, { id: generatedId });
+    const totalDocuments = await this.firestoreService.getTotalDocuments(collection);
     
+    if (registerPayloadDto.role === 'pengajar') {
+      registerPayloadDto.idMLTutor = totalDocuments + 1;
+    } else {
+      registerPayloadDto.idMLUser = totalDocuments + 1;
+    }
+
+    const generatedId = await this.firestoreService.addDocument(collection, registerPayloadDto);
+    registerPayloadDto.id = generatedId;
+    const updatePayload = {
+      id: generatedId,
+      ...(registerPayloadDto.role === 'pengajar' ? { idML: registerPayloadDto.idMLTutor } : { idML: registerPayloadDto.idMLUser })
+    };
+    await this.firestoreService.updateDocument(collection, generatedId, updatePayload);
+
     return registerPayloadDto;
   }
 }

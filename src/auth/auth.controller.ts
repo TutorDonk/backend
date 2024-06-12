@@ -12,6 +12,12 @@ import { LoginDto } from './dto/login.dto';
 export class AuthController {
     constructor(private authService : AuthService){}
 
+    @Post('register')
+    @ApiBody({ type: RegisterPayloadDto })
+    async register(@Body() registerPayloadDto: RegisterPayloadDto) {
+        return await this.authService.register(registerPayloadDto);
+    }
+    
     @Post('login')
     @UseGuards(LocalGuard)
     @ApiBody({ type: LoginDto })
@@ -24,11 +30,5 @@ export class AuthController {
     status(@Req() req : Request){
         console.log(req.user)
         return req.user
-    }
-
-    @Post('register')
-    @ApiBody({ type: RegisterPayloadDto })
-    async register(@Body() registerPayloadDto: RegisterPayloadDto) {
-        return await this.authService.register(registerPayloadDto);
     }
 }
