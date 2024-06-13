@@ -19,20 +19,43 @@ export class FirestoreService {
     await this.firestore.collection(collection).doc(id).update(data);
   }
 
-  async findDocumentByEmail(collection : string, email : string) : Promise<any>{
-    const querySnapshot = await this.firestore.collection(collection).where('email', '==', email).get();
+  async findDocumentByEmail(collection: string, email: string): Promise<any> {
+    const querySnapshot = await this.firestore
+      .collection(collection)
+      .where('email', '==', email)
+      .get();
     if (querySnapshot.empty) {
       return null;
     }
-    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   }
 
-  async findDocumentByIdTutorOrIdUser(collection : string, id : string, role : string) : Promise<any>{
-    let querySelector = ''
-    role == 'siswa' ? querySelector = 'idTutor' : querySelector = 'idSiswa'
-    const querySnapshot = await this.firestore.collection(collection).where(querySelector, '==', id).get();
+  async findDocumentByIdTutorOrIdUser(
+    collection: string,
+    id: string,
+    role: string,
+  ): Promise<any> {
+    let querySelector = '';
+    role === 'siswa'
+      ? (querySelector = 'idTutor')
+      : (querySelector = 'idSiswa');
+    const querySnapshot = await this.firestore
+      .collection(collection)
+      .where(querySelector, '==', id)
+      .get();
     if (querySnapshot.empty) {
       return null;
+    }
+    return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  }
+
+  async findBookingsByStatus(collection: string, id: string, status: number): Promise<any> {
+    const querySnapshot = await this.firestore.collection(collection)
+      .where('idSiswa', '==', id)
+      .where('status', '==', status)
+      .get();
+    if (querySnapshot.empty) {
+      return [];
     }
     return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   }
@@ -44,11 +67,14 @@ export class FirestoreService {
 
   async getAllDocuments(collection: string): Promise<any[]> {
     const querySnapshot = await this.firestore.collection(collection).get();
-    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   }
 
   async findTutorsByCourse(collection: string, course: string): Promise<any[]> {
-    const querySnapshot = await this.firestore.collection(collection).where('subjects', 'array-contains', course).get();
-    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const querySnapshot = await this.firestore
+      .collection(collection)
+      .where('subjects', 'array-contains', course)
+      .get();
+    return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   }
 }

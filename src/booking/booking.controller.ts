@@ -5,6 +5,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -38,12 +39,25 @@ export class BookingController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async getBooking(@Req() req : Request){
+  async getBooking(@Req() req: Request) {
     const id = req.user['0'].id;
     const role = req.user['0'].id;
-    return this.bookingService.getBooking(id, role)
+    return this.bookingService.getBooking(id, role);
   }
 
+  @Get('/history/:status')
+  @UseGuards(JwtAuthGuard)
+  async getBookingHistory(
+    @Req() req: Request,
+    @Param('status') status: string,
+  ) {
+    const id = req.user['0'].id;
+    const numericStatus = parseInt(status, 10);
+    console.log(
+      `Fetching booking history for user id: ${id}, status: ${numericStatus}`,
+    );
+    return this.bookingService.getBookingHistory(id, numericStatus);
+  }
 
   @Post()
   @UseGuards(JwtAuthGuard)
@@ -60,8 +74,8 @@ export class BookingController {
       namaSiswa,
       createdAt: new Date(),
     };
-    const id = await this.bookingService.createBooking(data)
-    return {id, ...data, status : 0}
+    const id = await this.bookingService.createBooking(data);
+    return { id, ...data, status: 0 };
   }
 
   @Patch(':id/status')
@@ -69,12 +83,10 @@ export class BookingController {
   @ApiBody({ type: UpdateStatusDto })
   async updateBookingStatus(
     @Param('id') id: string,
-    @Body() updateStatusDto: UpdateStatusDto
+    @Body() updateStatusDto: UpdateStatusDto,
   ) {
     const { status } = updateStatusDto;
     await this.bookingService.updateBookingStatus(id, status);
     return { id, status };
   }
-
-
 }
