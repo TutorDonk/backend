@@ -27,6 +27,16 @@ export class FirestoreService {
     return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   }
 
+  async findDocumentByIdTutorOrIdUser(collection : string, id : string, role : string) : Promise<any>{
+    let querySelector = ''
+    role == 'siswa' ? querySelector = 'idTutor' : querySelector = 'idSiswa'
+    const querySnapshot = await this.firestore.collection(collection).where(querySelector, '==', id).get();
+    if (querySnapshot.empty) {
+      return null;
+    }
+    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  }
+
   async getTotalDocuments(collection: string) {
     const querySnapshot = await this.firestore.collection(collection).get();
     return querySnapshot.size;
@@ -34,6 +44,11 @@ export class FirestoreService {
 
   async getAllDocuments(collection: string): Promise<any[]> {
     const querySnapshot = await this.firestore.collection(collection).get();
+    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  }
+
+  async findTutorsByCourse(collection: string, course: string): Promise<any[]> {
+    const querySnapshot = await this.firestore.collection(collection).where('subjects', 'array-contains', course).get();
     return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   }
 }
