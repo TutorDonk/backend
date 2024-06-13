@@ -8,7 +8,6 @@ import { ApiBody, ApiHeader, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
 
 @ApiTags('auth')
-@ApiBearerAuth()
 @Controller('auth')
 export class AuthController {
     constructor(private authService : AuthService){}
@@ -24,12 +23,5 @@ export class AuthController {
     @ApiBody({ type: LoginDto })
     login(@Req() req : Request){
        return req.user
-    }
-
-    @Get('status')
-    @UseGuards(JwtAuthGuard)
-    status(@Req() req : Request){
-        console.log(req.user)
-        return req.user
     }
 }
