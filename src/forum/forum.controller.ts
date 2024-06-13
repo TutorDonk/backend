@@ -5,6 +5,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { ForumService } from './forum.service';
 import { CreateForumDto } from './dto/createForum.dto';
 import { CreateCommentDto } from './dto/createComment.dto';
+import { LikeForumDto } from './dto/likeForum.dto';
 
 @ApiTags('forum')
 @ApiBearerAuth()
@@ -37,7 +38,8 @@ export class ForumController {
 
   @Patch(':id/like')
   @UseGuards(JwtAuthGuard)
-  async likeForum(@Param('id') id: string, @Param('isLike') isLike : boolean) {
+  @ApiBody({type : LikeForumDto})
+  async likeForum(@Param('id') id: string, @Body('isLike') isLike : boolean) {
     const result = await this.forumService.likeForum(id, isLike);
     return result;
   }
