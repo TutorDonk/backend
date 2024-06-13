@@ -6,6 +6,7 @@ import { FirestoreModule } from './firestore/firestore.module';
 import { ConfigModule } from '@nestjs/config';
 import { ProfileModule } from './profile/profile.module';
 import { ForumModule } from './forum/forum.module';
+import { BookingModule } from './booking/booking.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ForumModule } from './forum/forum.module';
     }),
     ProfileModule,
     ForumModule,
+    BookingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
