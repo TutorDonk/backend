@@ -14,7 +14,7 @@ export class UpdateNonTutorProfileDto {
   @ApiProperty({ example: '081234567890' })
   parentPhoneNumber: string;
 
-  @ApiProperty({ example: 'Hafidz Shidqi' })
+  @ApiProperty({ example: 'Baskara Nugraha' })
   parentName: string;
 
   @ApiProperty({

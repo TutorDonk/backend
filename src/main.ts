@@ -10,7 +10,7 @@ async function bootstrap() {
 
   // Swagger
   const config = new DocumentBuilder()
-    .setTitle('Y. Bandung')
+    .setTitle('TutorDonk')
     .setDescription('TutorDonk API description')
     .setVersion('1.0')
     .addBearerAuth()

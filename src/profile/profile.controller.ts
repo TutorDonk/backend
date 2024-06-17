@@ -29,26 +29,36 @@ export class ProfileController {
     }
   }
 
-  @Post()
+  @Post('tutor')
   @UseGuards(JwtAuthGuard)
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        domicile: { type: 'string' },
-        phoneNumber: { type: 'string' },
-        educationLevel: { type: 'number' },
-        gender: { type: 'string' },
-        subjects: { type: 'array', items: { type: 'string' }, nullable: true },
-        certifications: { type: 'array', items: { type: 'string' }, nullable: true },
-        parentPhoneNumber: { type: 'string', nullable: true },
-        parentName: { type: 'string', nullable: true }
-      }
+  @ApiBody({type : UpdateTutorProfileDto
+  })
+  async updateProfileTutor(
+    @Req() req: Request,
+    @Body() updateProfileDto: UpdateTutorProfileDto
+  ) {
+    const user = req.user;
+    console.log('User from req:', user);
+    const email = user['0']?.email;
+    const role = user['0']?.role;
+    if (!email) {
+      throw new BadRequestException('Email is missing from the user object');
     }
+
+    try {
+      return this.profileService.updateProfile(email, updateProfileDto, role);
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to update user profile');
+    }
+  }
+
+  @Post('siswa')
+  @UseGuards(JwtAuthGuard)
+  @ApiBody({type : UpdateNonTutorProfileDto
   })
   async updateProfile(
     @Req() req: Request,
-    @Body() updateProfileDto: UpdateTutorProfileDto | UpdateNonTutorProfileDto
+    @Body() updateProfileDto: UpdateNonTutorProfileDto
   ) {
     const user = req.user;
     console.log('User from req:', user);
