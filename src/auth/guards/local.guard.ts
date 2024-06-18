@@ -6,7 +6,6 @@ import { Observable } from "rxjs";
 export class LocalGuard extends AuthGuard('local'){
     canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
         // invoke local.strategy
-        console.log("babi")
         return super.canActivate(context)
     }
 }

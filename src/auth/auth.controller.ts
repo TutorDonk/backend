@@ -22,6 +22,6 @@ export class AuthController {
     @UseGuards(LocalGuard)
     @ApiBody({ type: LoginDto })
     login(@Req() req : Request){
-       return req.user
+       return {"message" : "login success", "token" : req.user}
     }
 }
