@@ -15,13 +15,16 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     const existingUser = await this.firestoreService.findDocumentByEmail('user', loginDto.email);
     const existingTutor = await this.firestoreService.findDocumentByEmail('tutor', loginDto.email);
-    if ((existingUser && existingUser[0].password == loginDto.password) || (existingTutor && existingTutor[0].password == loginDto.password)) {
+    
+    if ((existingUser && existingUser[0].password === loginDto.password) || (existingTutor && existingTutor[0].password === loginDto.password)) {
       if (existingUser) {
-        const {password, ...user} = existingUser;
-        return this.jwtService.sign(user);
+        const { password, ...user } = existingUser[0];
+        const token = this.jwtService.sign({ ...user, role: 'user' });
+        return { token, role: 'siswa' };
       } else if (existingTutor) {
-        const {password, ...tutor} = existingTutor;
-        return this.jwtService.sign(tutor);
+        const { password, ...tutor } = existingTutor[0];
+        const token = this.jwtService.sign({ ...tutor, role: 'tutor' });
+        return { token, role: 'pengajar' };
       }
     } else {
       throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);

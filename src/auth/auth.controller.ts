@@ -10,7 +10,7 @@ import { LoginDto } from './dto/login.dto';
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-    constructor(private authService : AuthService){}
+    constructor(private authService: AuthService) {}
 
     @Post('register')
     @ApiBody({ type: RegisterPayloadDto })
@@ -21,7 +21,12 @@ export class AuthController {
     @Post('login')
     @UseGuards(LocalGuard)
     @ApiBody({ type: LoginDto })
-    login(@Req() req : Request){
-       return {"message" : "login success", "token" : req.user}
+    async login(@Req() req: Request) {
+        const { token, role } = await this.authService.login(req.body);
+        return {
+            message: "login success",
+            token,
+            role
+        };
     }
 }
