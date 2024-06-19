@@ -23,6 +23,8 @@ export class ProfileController {
     }
 
     try {
+      const result = await this.profileService.getUserProfile(email)
+      console.log("result: ", result)
       return this.profileService.getUserProfile(email);
     } catch (error) {
       throw new InternalServerErrorException('Failed to get user profile');

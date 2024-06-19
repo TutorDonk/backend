@@ -61,6 +61,7 @@ export class ProfileService {
           ...updateData,
           subjects: (profileData as UpdateTutorProfileDto).subjects,
           certifications: (profileData as UpdateTutorProfileDto).certifications,
+          feePerHour: (profileData as UpdateTutorProfileDto).feePerHour,
         };
       } else {
         updateData = {
