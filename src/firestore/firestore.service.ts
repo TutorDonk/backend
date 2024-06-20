@@ -44,7 +44,7 @@ export class FirestoreService {
       .where(querySelector, '==', id)
       .get();
     if (querySnapshot.empty) {
-      return null;
+      return [];
     }
     return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   }
